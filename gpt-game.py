@@ -5,6 +5,7 @@ import pygame
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+RED = (255, 0, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
@@ -38,8 +39,8 @@ class TypingGame:
         self.font = pygame.font.Font(None, 40)
         self.text_file = './texts/lorem_ipsum.txt'
         self.sentences = read_sentences_from_file(self.text_file)
-        self.sentence_iterator = iter(self.sentences)
-        self.current_sentence = next(self.sentence_iterator)
+        self.sentence_iterator = None
+        self.current_sentence = None
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
@@ -60,8 +61,22 @@ class TypingGame:
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
         self.screen.blit(sentence_text, sentence_rect)
 
+    def display_restart(self):
+        restart_text = self.font.render('RESTART GAME', True, RED)
+        restart_rect = restart_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT - 50))
+        self.screen.blit(restart_text, restart_rect)
+
+    def restart_game(self):
+        self.sentence_iterator = iter(self.sentences)
+        self.current_sentence = next(self.sentence_iterator)
+        self.user_text = ""
+        self.total_user_input = []
+        self.total_expected_input = []
+        self.i = 0
+
     def run(self):
         self.running = True
+        self.restart_game()
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -83,8 +98,9 @@ class TypingGame:
                 self.i += 1
 
             # Display the score
-            if self.i == 2:
+            if self.i == 1:
                 self.display_accuracy()
+                self.display_restart()
 
             pygame.display.update()
             self.clock.tick(30)
