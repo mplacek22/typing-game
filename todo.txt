@@ -1,0 +1,8 @@
+1. Zmienić słowa na długi tekst
+2. Zmienić ocenianie
+3. Dodać timer
+4. Dodać widok z wynikami
+5. Dodać opcję restart
+6. Dodać podświetlanie tekstu
+7. Dodać wybór poziomu trudności
+8. Dodać wybór tekstu
