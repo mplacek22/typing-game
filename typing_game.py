@@ -97,13 +97,11 @@ class TypingGame:
                 self.user_text = ""
                 self.i += 1
 
-            # Display the score
             if self.i == 1:
                 self.display_accuracy()
                 self.display_restart()
 
             pygame.display.update()
-            self.clock.tick(30)
 
         pygame.quit()
 
