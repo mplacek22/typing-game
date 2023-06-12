@@ -6,6 +6,7 @@ import pygame
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
@@ -59,7 +60,25 @@ class TypingGame:
     def display_current_sentence(self):
         sentence_text = self.font.render(self.current_sentence, True, WHITE)
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
-        self.screen.blit(sentence_text, sentence_rect)
+        letter_x = sentence_rect.left  # Starting x-coordinate
+
+        for i, letter in enumerate(self.current_sentence):
+            letter_width = self.font.size(letter)[0]  # Width of the current letter
+
+            if i < len(self.user_text):
+                if self.user_text[i] == letter:
+                    letter_color = GREEN  # Green for correct letter
+                else:
+                    letter_color = RED # Red for incorrect letter
+            else:
+                letter_color = WHITE
+
+            letter_surface = self.font.render(letter, True, letter_color)
+            letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
+
+            self.screen.blit(letter_surface, letter_rect)
+
+            letter_x += letter_width  # Update x-coordinate for the next letter
 
     def display_restart(self):
         restart_text = self.font.render('RESTART GAME', True, RED)
@@ -97,7 +116,7 @@ class TypingGame:
                 self.user_text = ""
                 self.i += 1
 
-            if self.i == 1:
+            if self.i == 2:
                 self.display_accuracy()
                 self.display_restart()
 
