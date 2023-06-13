@@ -63,13 +63,12 @@ class TypingGame:
         letter_x = sentence_rect.left  # Starting x-coordinate
 
         for i, letter in enumerate(self.current_sentence):
-            letter_width = self.font.size(letter)[0]  # Width of the current letter
 
             if i < len(self.user_text):
                 if self.user_text[i] == letter:
                     letter_color = GREEN  # Green for correct letter
                 else:
-                    letter_color = RED # Red for incorrect letter
+                    letter_color = RED  # Red for incorrect letter
             else:
                 letter_color = WHITE
 
@@ -78,12 +77,22 @@ class TypingGame:
 
             self.screen.blit(letter_surface, letter_rect)
 
+            letter_width = self.font.size(letter)[0]  # Width of the current letter
             letter_x += letter_width  # Update x-coordinate for the next letter
+
+    def next_sentence(self):
+        if len(self.user_text) == len(self.current_sentence):
+            self.total_user_input += self.user_text
+            self.total_expected_input += self.current_sentence
+            self.current_sentence = next(self.sentence_iterator)
+            self.user_text = ""
+            self.i += 1
 
     def display_restart(self):
         restart_text = self.font.render('RESTART GAME', True, RED)
         restart_rect = restart_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT - 50))
         self.screen.blit(restart_text, restart_rect)
+        return restart_rect
 
     def restart_game(self):
         self.sentence_iterator = iter(self.sentences)
@@ -103,19 +112,18 @@ class TypingGame:
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     self.user_text += event.unicode
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    restart_rect = self.display_restart()
+                    if restart_rect.collidepoint(event.pos):
+                        self.restart_game()
 
             self.screen.fill(BLACK)
 
             self.display_current_sentence()
             self.display_user_input()
+            self.next_sentence()
 
-            if len(self.user_text) == len(self.current_sentence):
-                self.total_user_input += self.user_text
-                self.total_expected_input += self.current_sentence
-                self.current_sentence = next(self.sentence_iterator)
-                self.user_text = ""
-                self.i += 1
-
+            # end game
             if self.i == 2:
                 self.display_accuracy()
                 self.display_restart()
