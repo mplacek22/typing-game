@@ -14,14 +14,29 @@ def calculate_accuracy(user_input, expected_input):
     return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
 
 
+# def read_sentences_from_file(file_path):
+#     sentences_list = []
+#     with open(file_path, 'r') as file:
+#         text = file.read()
+#         sentence_delimiters = ['.', '!', '?']
+#         for delimiter in sentence_delimiters:
+#             sentences_list.extend(text.split(delimiter))
+#         sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+#     return sentences_list
+
 def read_sentences_from_file(file_path):
     sentences_list = []
     with open(file_path, 'r') as file:
         text = file.read()
         sentence_delimiters = ['.', '!', '?']
-        for delimiter in sentence_delimiters:
-            sentences_list.extend(text.split(delimiter))
-        sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+        current_sentence = ""
+        for char in text:
+            current_sentence += char
+            if char in sentence_delimiters:
+                sentences_list.append(current_sentence.strip())
+                current_sentence = ""
+    if current_sentence:
+        sentences_list.append(current_sentence.strip())
     return sentences_list
 
 
@@ -64,6 +79,7 @@ class TypingGame:
     def display_current_sentence(self):
         sentence_text = self.font.render(self.current_sentence, True, WHITE)
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
+
         letter_x = sentence_rect.left  # Starting x-coordinate
 
         for i, letter in enumerate(self.current_sentence):
