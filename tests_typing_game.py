@@ -45,5 +45,24 @@ def test_typing_game_stop_timer():
     assert game.timer_thread.remaining_time == 10  # Remaining time should not be changed
 
 
+def test_typing_game_restart_game():
+    game = TypingGame()
+    game.sentences = ["Sentence 1", "Sentence 2"]
+    game.sentence_iterator = iter(game.sentences)
+    game.current_sentence = next(game.sentence_iterator)
+    game.user_text = "Sentence 1"
+    game.total_user_input = ["Sentence 1"]
+    game.total_expected_input = ["Sentence 1"]
+    game.i = 1
+
+    game.restart_game()
+
+    assert list(game.sentence_iterator) == game.sentences
+    assert game.current_sentence == game.sentences[0]
+    assert game.user_text == ""
+    assert game.total_user_input == []
+    assert game.total_expected_input == []
+    assert game.i == 0
+
 if __name__ == '__main__':
     pytest.main()

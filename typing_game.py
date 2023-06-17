@@ -52,7 +52,7 @@ class TypingGame:
         pygame.display.set_caption("Typing Game")
 
         # Game variables
-        self.clock = pygame.time.Clock()
+        # self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 40)
         self.text_file = './texts/lorem_ipsum.txt'
         self.sentences = read_sentences_from_file(self.text_file)
@@ -79,7 +79,6 @@ class TypingGame:
     def display_current_sentence(self):
         sentence_text = self.font.render(self.current_sentence, True, WHITE)
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
-
         letter_x = sentence_rect.left  # Starting x-coordinate
 
         for i, letter in enumerate(self.current_sentence):
@@ -127,7 +126,9 @@ class TypingGame:
         self.screen.blit(timer_text, (self.WIDTH - 150, 10))
 
     def start_timer(self):
-        self.timer_thread.start()
+        if not self.timer_thread.is_alive():
+            self.timer_thread = TimerThread()  # Create a new TimerThread object
+            self.timer_thread.start()
 
     def stop_timer(self):
         self.timer_thread.stop()
@@ -141,7 +142,6 @@ class TypingGame:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                    self.stop_timer()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     self.user_text += event.unicode
