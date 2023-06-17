@@ -1,6 +1,13 @@
 import sys
+from enum import Enum
 import pygame
 from pygame.locals import *
+
+
+class Level(Enum):
+    EASY = 0
+    MEDIUM = 1
+    HARD = 2
 
 
 class TypingGameGUI:
@@ -10,7 +17,7 @@ class TypingGameGUI:
         self.HEIGHT = 600
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Typing Game")
-        self.font_title = pygame.font.Font(None, 60)  # Powiększona czcionka dla tytułu
+        self.font_title = pygame.font.Font(None, 60)
         self.font_button = pygame.font.Font(None, 40)
 
         button_width = 200
@@ -21,12 +28,13 @@ class TypingGameGUI:
 
         self.difficulty_buttons = []
         difficulty_button_y = button_y + button_height + 50
-        for i, difficulty in enumerate(["Easy", "Difficult", "Hard"]):
+        for i, difficulty in enumerate(Level):
             difficulty_button_rect = pygame.Rect(button_x, difficulty_button_y, button_width, button_height)
             self.difficulty_buttons.append(difficulty_button_rect)
             difficulty_button_y += button_height + 20
 
-        self.game_state = "menu"  # Stan gry: "menu", "difficulty", "game"
+        self.game_state = "menu"  # Game state: "menu", "difficulty", "game"
+        self.difficulty_level = None  # Selected difficulty level
 
     def run(self):
         running = True
@@ -41,9 +49,12 @@ class TypingGameGUI:
                     if self.game_state == "menu":
                         if self.start_button_rect.collidepoint(event.pos):
                             self.game_state = "difficulty"
+
                     elif self.game_state == "difficulty":
-                        for button in self.difficulty_buttons:
+                        for i, button in enumerate(self.difficulty_buttons):
                             if button.collidepoint(event.pos):
+                                self.difficulty_level = Level(i)
+                                self.game_state = "game"  # Dodane przypisanie stanu "game"
                                 self.start_game()
 
             self.screen.fill((0, 0, 0))
@@ -83,7 +94,7 @@ class TypingGameGUI:
         for i, button in enumerate(self.difficulty_buttons):
             button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
             pygame.draw.rect(self.screen, (255, 140, 0), button_rect)
-            difficulty_text = self.font_button.render(["Beginner", "Medium", "Difficult"][i], True, (255, 255, 255))
+            difficulty_text = self.font_button.render([level.name.capitalize() for level in Level][i], True, (255, 255, 255))
             difficulty_text_rect = difficulty_text.get_rect(center=button_rect.center)
             self.screen.blit(difficulty_text, difficulty_text_rect)
 
@@ -91,7 +102,7 @@ class TypingGameGUI:
 
     def start_game(self):
         from typing_game import TypingGame
-        game = TypingGame()
+        game = TypingGame(self.difficulty_level)
         game.run()
 
 

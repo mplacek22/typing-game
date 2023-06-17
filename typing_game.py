@@ -1,3 +1,4 @@
+from gui import Level
 from timer import TimerThread
 import sys
 import editdistance
@@ -46,8 +47,20 @@ def read_sentences_from_file(file_path):
     return sentences_list
 
 
+def get_text_file_path(difficulty_level):
+    match difficulty_level:
+        case Level.EASY:
+            return './texts/easy.txt'
+        case Level.MEDIUM:
+            return './texts/medium.txt'
+        case Level.HARD:
+            return './texts/hard.txt'
+        case _:
+            return './texts/sample.txt'
+
+
 class TypingGame:
-    def __init__(self):
+    def __init__(self, difficulty_level):
         self.running = False
         pygame.init()
 
@@ -58,9 +71,8 @@ class TypingGame:
         pygame.display.set_caption("Typing Game")
 
         # Game variables
-        # self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 40)
-        self.text_file = './texts/lorem_ipsum.txt'
+        self.text_file = get_text_file_path(difficulty_level)
         self.sentences = read_sentences_from_file(self.text_file)
         self.sentence_iterator = None
         self.current_sentence = None
@@ -173,7 +185,6 @@ class TypingGame:
 
         pygame.quit()
 
-
-if __name__ == '__main__':
-    game = TypingGame()
-    game.run()
+# if __name__ == '__main__':
+#     game = TypingGame()
+#     game.run()

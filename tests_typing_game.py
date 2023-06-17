@@ -1,8 +1,6 @@
 import time
-
 import pytest
 from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
-import texts
 
 
 def test_calculate_accuracy():
@@ -63,6 +61,7 @@ def test_typing_game_restart_game():
     assert game.total_user_input == []
     assert game.total_expected_input == []
     assert game.i == 0
+
 
 if __name__ == '__main__':
     pytest.main()
