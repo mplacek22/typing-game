@@ -1,3 +1,4 @@
+from timer import TimerThread
 import sys
 import editdistance
 import pygame
@@ -46,6 +47,9 @@ class TypingGame:
         self.total_user_input = []
         self.total_expected_input = []
         self.i = 0
+
+        # Timer variables
+        self.timer_thread = TimerThread()
 
     def display_accuracy(self):
         accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
@@ -102,13 +106,26 @@ class TypingGame:
         self.total_expected_input = []
         self.i = 0
 
+    def display_timer(self):
+        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, WHITE)
+        self.screen.blit(timer_text, (self.WIDTH - 150, 10))
+
+    def start_timer(self):
+        self.timer_thread.start()
+
+    def stop_timer(self):
+        self.timer_thread.stop()
+
     def run(self):
         self.running = True
         self.restart_game()
+        self.start_timer()
+
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    self.stop_timer()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     self.user_text += event.unicode
@@ -116,15 +133,17 @@ class TypingGame:
                     restart_rect = self.display_restart()
                     if restart_rect.collidepoint(event.pos):
                         self.restart_game()
+                        self.start_timer()
 
             self.screen.fill(BLACK)
 
             self.display_current_sentence()
             self.display_user_input()
             self.next_sentence()
+            self.display_timer()
 
-            # end game
-            if self.i == 2:
+            # End game
+            if not self.timer_thread.is_running:
                 self.display_accuracy()
                 self.display_restart()
 
