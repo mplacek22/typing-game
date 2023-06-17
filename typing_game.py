@@ -11,7 +11,13 @@ GREEN = (0, 255, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
-    return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
+    accuracy = 0
+
+    evaluate = editdistance.eval(user_input, expected_input)
+    if evaluate > 0:
+        accuracy = round((1 - evaluate / len(expected_input)) * 100, 2)
+
+    return accuracy
 
 
 # def read_sentences_from_file(file_path):
