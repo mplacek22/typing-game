@@ -4,7 +4,7 @@ import time
 
 import pygame
 
-background_image = 'background.jpg'
+background_image = 'images/background.jpg'
 sentences_file = 'texts/lorem_ipsum.txt'
 restart_logo = 'restart.png'
 

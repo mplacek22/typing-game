@@ -1,3 +1,5 @@
+from gui import Level
+from timer import TimerThread
 import sys
 import editdistance
 import pygame
@@ -10,22 +12,55 @@ GREEN = (0, 255, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
-    return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
+    accuracy = 0
 
+    evaluate = editdistance.eval(user_input, expected_input)
+    if evaluate > 0:
+        accuracy = round((1 - evaluate / len(expected_input)) * 100, 2)
+
+    return accuracy
+
+
+# def read_sentences_from_file(file_path):
+#     sentences_list = []
+#     with open(file_path, 'r') as file:
+#         text = file.read()
+#         sentence_delimiters = ['.', '!', '?']
+#         for delimiter in sentence_delimiters:
+#             sentences_list.extend(text.split(delimiter))
+#         sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+#     return sentences_list
 
 def read_sentences_from_file(file_path):
     sentences_list = []
     with open(file_path, 'r') as file:
         text = file.read()
         sentence_delimiters = ['.', '!', '?']
-        for delimiter in sentence_delimiters:
-            sentences_list.extend(text.split(delimiter))
-        sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+        current_sentence = ""
+        for char in text:
+            current_sentence += char
+            if char in sentence_delimiters:
+                sentences_list.append(current_sentence.strip())
+                current_sentence = ""
+    if current_sentence:
+        sentences_list.append(current_sentence.strip())
     return sentences_list
 
 
+def get_text_file_path(difficulty_level):
+    match difficulty_level:
+        case Level.EASY:
+            return './texts/easy.txt'
+        case Level.MEDIUM:
+            return './texts/medium.txt'
+        case Level.HARD:
+            return './texts/hard.txt'
+        case _:
+            return './texts/sample.txt'
+
+
 class TypingGame:
-    def __init__(self):
+    def __init__(self, difficulty_level):
         self.running = False
         pygame.init()
 
@@ -36,9 +71,8 @@ class TypingGame:
         pygame.display.set_caption("Typing Game")
 
         # Game variables
-        self.clock = pygame.time.Clock()
         self.font = pygame.font.Font(None, 40)
-        self.text_file = './texts/lorem_ipsum.txt'
+        self.text_file = get_text_file_path(difficulty_level)
         self.sentences = read_sentences_from_file(self.text_file)
         self.sentence_iterator = None
         self.current_sentence = None
@@ -46,6 +80,9 @@ class TypingGame:
         self.total_user_input = []
         self.total_expected_input = []
         self.i = 0
+
+        # Timer variables
+        self.timer_thread = TimerThread()
 
     def display_accuracy(self):
         accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
@@ -102,9 +139,23 @@ class TypingGame:
         self.total_expected_input = []
         self.i = 0
 
+    def display_timer(self):
+        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, WHITE)
+        self.screen.blit(timer_text, (self.WIDTH - 150, 10))
+
+    def start_timer(self):
+        if not self.timer_thread.is_alive():
+            self.timer_thread = TimerThread()  # Create a new TimerThread object
+            self.timer_thread.start()
+
+    def stop_timer(self):
+        self.timer_thread.stop()
+
     def run(self):
         self.running = True
         self.restart_game()
+        self.start_timer()
+
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -116,15 +167,17 @@ class TypingGame:
                     restart_rect = self.display_restart()
                     if restart_rect.collidepoint(event.pos):
                         self.restart_game()
+                        self.start_timer()
 
             self.screen.fill(BLACK)
 
             self.display_current_sentence()
             self.display_user_input()
             self.next_sentence()
+            self.display_timer()
 
-            # end game
-            if self.i == 2:
+            # End game
+            if not self.timer_thread.is_running:
                 self.display_accuracy()
                 self.display_restart()
 
@@ -132,7 +185,6 @@ class TypingGame:
 
         pygame.quit()
 
-
-if __name__ == '__main__':
-    game = TypingGame()
-    game.run()
+# if __name__ == '__main__':
+#     game = TypingGame()
+#     game.run()
