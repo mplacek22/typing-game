@@ -1,12 +1,9 @@
 mock
 
 Maja:
-naprawić calculate_accuracy i testy
-naprawić funkcję read_sentences_from_file i testy
 
 Iza:
 restart działa tak, że wracamy do wyboru poziomu trudności
-Przesunąć przyciski w dobre miejsce
 
 
 Pytania:

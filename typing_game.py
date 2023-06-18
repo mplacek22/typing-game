@@ -201,8 +201,3 @@ class TypingGame:
             self.adjust_last_sentence()
             self.display_accuracy()
             self.display_restart()
-
-
-if __name__ == '__main__':
-    game = TypingGame(Level.EASY)
-    game.run()
