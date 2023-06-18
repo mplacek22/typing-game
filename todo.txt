@@ -7,8 +7,7 @@ naprawić funkcję read_sentences_from_file i testy
 Iza:
 Dodać funkcję zakończenia gry: accuracy na środku, restart zostawić
 restart działa tak, że wracamy do wyboru poziomu trudności
-Czas w konstruktorze
-
+Przesunąć przyciski w dobre miejsce
 
 
 Pytania:

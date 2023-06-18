@@ -83,7 +83,8 @@ class TypingGame:
         self.total_expected_input = []
 
         # Timer variables
-        self.timer_thread = TimerThread()
+        self.time = 10
+        self.timer_thread = TimerThread(self.time)
 
     def display_accuracy(self):
         # if len(self.total_user_input) != len(self.total_expected_input):
@@ -156,7 +157,7 @@ class TypingGame:
 
     def start_timer(self):
         if not self.timer_thread.is_alive():
-            self.timer_thread = TimerThread()  # Create a new TimerThread object
+            self.timer_thread = TimerThread(self.time)  # Creating a new TimerThread object
             self.timer_thread.start()
 
     def stop_timer(self):
