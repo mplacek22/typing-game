@@ -30,7 +30,8 @@ class TypingGameGUI:
         self.difficulty_buttons = []
         difficulty_button_y = self.button_y + self.button_height + 50
         for i, difficulty in enumerate(Level):
-            difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width, self.button_height)
+            difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width,
+                                                 self.button_height)
             self.difficulty_buttons.append(difficulty_button_rect)
             difficulty_button_y += self.button_height + 20
 
@@ -64,7 +65,10 @@ class TypingGameGUI:
             elif self.game_state == "difficulty":
                 self.draw_difficulty_selection()
             elif self.game_state == "game":
-                self.start_game()  # Call start_game() only when the game state is "game"
+                self.start_game()
+
+                # Move self.button_y outside the actions loop
+            self.button_y = (self.HEIGHT - (len(self.difficulty_buttons) * (self.button_height + 20))) // 2 + 100
 
             pygame.display.update()
 
@@ -73,44 +77,26 @@ class TypingGameGUI:
         text_rect = text.get_rect(center=(self.WIDTH // 2, 150))
         self.screen.blit(text, text_rect)
 
+    def draw_button(self, text, color, used_button):
+        pygame.draw.rect(self.screen, color, used_button)
+        button_text = self.font_button.render(text, True, (255, 255, 255))
+        button_text_rect = button_text.get_rect(center=used_button.center)
+        self.screen.blit(button_text, button_text_rect)
+
     def draw_menu(self):
         self.draw_heading("TYPING GAME")
-
-        pygame.draw.rect(self.screen, "#00CED1", self.start_button_rect)
-        start_text = self.font_button.render("Start Game", True, (255, 255, 255))
-        start_text_rect = start_text.get_rect(center=self.start_button_rect.center)
-        self.screen.blit(start_text, start_text_rect)
+        self.draw_button("Start Game", "#00CED1", self.start_button_rect)
 
     def draw_difficulty_selection(self):
         self.draw_heading("SELECT DIFFICULTY")
 
-        button_width = 200
-        button_height = 80
-        button_x = (self.WIDTH - button_width) // 2
-        total_height = len(self.difficulty_buttons) * (button_height + 20)
-        button_y = (self.HEIGHT - total_height) // 2 + 100
+        self.button_y = self.button_y  # Add this line to restart self.button_y value
 
         for i, button in enumerate(self.difficulty_buttons):
-            button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
-            pygame.draw.rect(self.screen, (255, 140, 0), button_rect)
+            button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
+            self.draw_button(Level(i).name.capitalize(), (255, 140, 0), button_rect)
+            self.button_y += self.button_height + 20
 
-            difficulty_text = self.font_button.render(Level(i).name.capitalize(), True, (255, 255, 255))
-            difficulty_text_rect = difficulty_text.get_rect(center=button_rect.center)
-            self.screen.blit(difficulty_text, difficulty_text_rect)
-
-            button_y += button_height + 20
-
-        # Display the selected difficulty level
-        if self.difficulty_level is not None:
-            selected_difficulty_text = self.font_button.render(
-                "Selected Difficulty: " + self.difficulty_level.name.capitalize(),
-                True,
-                (255, 255, 255)
-            )
-            selected_difficulty_text_rect = selected_difficulty_text.get_rect(center=(self.WIDTH // 2, 400))
-            self.screen.blit(selected_difficulty_text, selected_difficulty_text_rect)
-
-        # Update the display
         pygame.display.flip()
 
     def start_game(self):
