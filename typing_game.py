@@ -94,41 +94,37 @@ class TypingGame:
         accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
 
-    def display_user_input(self):
-        if not self.game_over:
-            text = self.user_text
-            color = WHITE
-            pos = 50
-        else:
-            text = 'GAME OVER!'
-            color = RED
-            pos = 0
-
+    def display_center(self, text, color, pos):
         text_render = self.font.render(text, True, color)
         text_rect = text_render.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 + pos))
         self.screen.blit(text_render, text_rect)
 
+    def display_user_input(self):
+        self.display_center(self.user_text, WHITE, 50)
+
+    def display_game_over(self):
+        self.display_center('GAME OVER!', RED, 0)
+
     def display_current_sentence(self):
-        if not self.game_over:  # Display current sentence if the game is not over
-            sentence_text = self.font.render(self.current_sentence, True, WHITE)
-            sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
-            letter_x = sentence_rect.left  # Starting x-coordinate
+        sentence_text = self.font.render(self.current_sentence, True, WHITE)
+        sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
+        letter_x = sentence_rect.left  # Starting x-coordinate
 
-            for i, letter in enumerate(self.current_sentence):
-                letter_color = WHITE
-                if i < len(self.user_text):
-                    if self.user_text[i] == letter:
-                        letter_color = GREEN  # Green for correct letter
-                    else:
-                        letter_color = RED  # Red for incorrect letter
+        for i, letter in enumerate(self.current_sentence):
+            letter_color = WHITE
+            if i < len(self.user_text):
+                if self.user_text[i] == letter:
+                    letter_color = GREEN  # Green for correct letter
+                else:
+                    letter_color = RED  # Red for incorrect letter
 
-                letter_surface = self.font.render(letter, True, letter_color)
-                letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
+            letter_surface = self.font.render(letter, True, letter_color)
+            letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
 
-                self.screen.blit(letter_surface, letter_rect)
+            self.screen.blit(letter_surface, letter_rect)
 
-                letter_width = self.font.size(letter)[0]  # Width of the current letter
-                letter_x += letter_width  # Update x-coordinate for the next letter
+            letter_width = self.font.size(letter)[0]  # Width of the current letter
+            letter_x += letter_width  # Update x-coordinate for the next letter
 
     def next_sentence(self):
         self.total_user_input += self.user_text
@@ -194,13 +190,17 @@ class TypingGame:
 
             self.screen.fill(BLACK)
 
-            self.display_current_sentence()
-            self.display_user_input()
             self.display_timer()
 
-            if len(self.user_text) == len(self.current_sentence):
-                if self.timer_thread.is_running:  # Check if the timer is still running
-                    self.next_sentence()
+            if not self.game_over:
+                self.display_current_sentence()
+                self.display_user_input()
+
+                if len(self.user_text) == len(self.current_sentence):
+                    if self.timer_thread.is_running:  # Check if the timer is still running
+                        self.next_sentence()
+            else:
+                self.display_game_over()
 
             self.end_game()
 
