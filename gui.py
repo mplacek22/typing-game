@@ -1,18 +1,21 @@
 import sys
-from enum import Enum
 import pygame
 from pygame.locals import *
 
+from enum_level import Level
+from typing_game import TypingGame
 
-class Level(Enum):
-    EASY = 0
-    MEDIUM = 1
-    HARD = 2
+
+def start_game(difficulty_level):  # Dodanie parametru difficulty_level
+    game = TypingGame(difficulty_level)  # Przekazanie wartości difficulty_level do obiektu TypingGame
+    game.run()
 
 
 class TypingGameGUI:
     def __init__(self):
         pygame.init()
+
+        # Set up the screen
         self.WIDTH = 900
         self.HEIGHT = 600
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
@@ -25,14 +28,21 @@ class TypingGameGUI:
         self.button_x = (self.WIDTH - self.button_width) // 2
         self.button_y = (self.HEIGHT - self.button_height) // 2
 
+        # Set up buttons
         self.start_button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
 
         self.difficulty_buttons = []
         difficulty_button_y = self.button_y + self.button_height + 50
-        for i, difficulty in enumerate(Level):
+        # for i, difficulty in enumerate(Level):
+        #     difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width,
+        #                                          self.button_height)
+        #     self.difficulty_buttons.append(difficulty_button_rect)
+        #     difficulty_button_y += self.button_height + 20
+
+        for difficulty in Level:
             difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width,
                                                  self.button_height)
-            self.difficulty_buttons.append(difficulty_button_rect)
+            self.difficulty_buttons.append((difficulty_button_rect, difficulty))
             difficulty_button_y += self.button_height + 20
 
         self.game_state = "menu"  # Game state: "menu", "difficulty", "game"
@@ -52,11 +62,11 @@ class TypingGameGUI:
                         if self.start_button_rect.collidepoint(event.pos):
                             self.game_state = "difficulty"
 
-                    elif self.game_state == "difficulty":
-                        for i, button in enumerate(self.difficulty_buttons):
-                            if button.collidepoint(event.pos):
-                                self.difficulty_level = Level(i)
-                                self.game_state = "game"  # Update game state, but don't start the game immediately
+                    for button_rect, difficulty in self.difficulty_buttons:
+                        if button_rect.collidepoint(event.pos):
+                            self.difficulty_level = difficulty
+                            self.game_state = "game"  # Update game state, but don't start the game immediately
+                            start_game(difficulty)  # Przekazanie wartości difficulty_level do metody start_game()
 
             self.screen.fill((0, 0, 0))
 
@@ -64,10 +74,8 @@ class TypingGameGUI:
                 self.draw_menu()
             elif self.game_state == "difficulty":
                 self.draw_difficulty_selection()
-            elif self.game_state == "game":
-                self.start_game()
 
-                # Move self.button_y outside the actions loop
+            # Move self.button_y outside the actions loop
             self.button_y = (self.HEIGHT - (len(self.difficulty_buttons) * (self.button_height + 20))) // 2 + 100
 
             pygame.display.update()
@@ -90,7 +98,7 @@ class TypingGameGUI:
     def draw_difficulty_selection(self):
         self.draw_heading("SELECT DIFFICULTY")
 
-        self.button_y = self.button_y  # Add this line to restart self.button_y value
+        self.button_y = self.button_y  # This line restart self.button_y value
 
         for i, button in enumerate(self.difficulty_buttons):
             button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
@@ -98,11 +106,6 @@ class TypingGameGUI:
             self.button_y += self.button_height + 20
 
         pygame.display.flip()
-
-    def start_game(self):
-        from typing_game import TypingGame
-        game = TypingGame(self.difficulty_level)
-        game.run()
 
 
 if __name__ == "__main__":

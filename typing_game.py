@@ -1,4 +1,6 @@
-from gui import Level
+from pygame import QUIT
+
+from enum_level import Level
 from timer import TimerThread
 import sys
 import editdistance
@@ -116,75 +118,6 @@ class TypingGame:
             letter_width = self.font.size(letter)[0]  # Width of the current letter
             letter_x += letter_width  # Update x-coordinate for the next letter
 
-    # def display_current_sentence(self):
-    #     sentence_text = self.font.render(self.current_sentence, True, WHITE)
-    #     sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
-    #     max_width = self.WIDTH - 20  # Maximum width to fit within the screen
-    #
-    #     if sentence_rect.width <= max_width:
-    #         # If the sentence fits within the screen width, display it as before
-    #         letter_x = sentence_rect.left  # Starting x-coordinate
-    #
-    #         for i, letter in enumerate(self.current_sentence):
-    #             letter_color = WHITE
-    #             if i < len(self.user_text):
-    #                 if self.user_text[i] == letter:
-    #                     letter_color = GREEN  # Green for correct letter
-    #                 else:
-    #                     letter_color = RED  # Red for incorrect letter
-    #
-    #             letter_surface = self.font.render(letter, True, letter_color)
-    #             letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
-    #             self.screen.blit(letter_surface, letter_rect)
-    #
-    #             letter_width = self.font.size(letter)[0]  # Width of the current letter
-    #             letter_x += letter_width  # Update x-coordinate for the next letter
-    #     else:
-    #         # If the sentence exceeds the screen width, wrap it to multiple lines
-    #         words = self.current_sentence.split()
-    #         lines = []
-    #         current_line = ""
-    #         for word in words:
-    #             test_line = current_line + word + " "
-    #             test_line_render = self.font.render(test_line, True, WHITE)
-    #             if test_line_render.get_rect().width > max_width:
-    #                 lines.append(current_line.strip())
-    #                 current_line = ""
-    #             current_line += word + " "
-    #
-    #         lines.append(current_line.strip())
-    #
-    #         letter_y = sentence_rect.bottom  # Starting y-coordinate
-    #         for line in lines:
-    #             line_x = self.WIDTH // 2 - self.font.size(line)[0] // 2  # Starting x-coordinate for each line
-    #             for i, letter in enumerate(line):
-    #                 letter_color = WHITE
-    #                 if i < len(self.user_text):
-    #                     if self.user_text[i] == letter:
-    #                         letter_color = GREEN  # Green for correct letter
-    #                     else:
-    #                         letter_color = RED  # Red for incorrect letter
-    #
-    #                 if i == len(self.user_text) and i < len(
-    #                         self.current_sentence):  # Highlight the currently typed letter
-    #                     letter_color = WHITE
-    #
-    #                 letter_surface = self.font.render(letter, True, letter_color)
-    #                 letter_rect = letter_surface.get_rect(topleft=(line_x, letter_y))
-    #                 self.screen.blit(letter_surface, letter_rect)
-    #
-    #                 if letter == " ":
-    #                     space_width = self.font.size(" ")[0]
-    #                     line_x += space_width
-    #                 else:
-    #                     letter_width = self.font.size(letter)[0]  # Width of the current letter
-    #                     line_x += letter_width  # Update x-coordinate for the next letter
-    #
-    #                 # Increment i by the number of spaces to skip over them
-    #                 i += line.count(" ")
-    #
-    #             letter_y += self.font.get_height()  # Move to the next line
-
     def next_sentence(self):
         self.total_user_input += self.user_text
         self.total_expected_input += self.current_sentence
@@ -224,9 +157,10 @@ class TypingGame:
 
         while self.running:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == QUIT:
                     self.running = False
                     self.stop_timer()
+                    pygame.quit()
                     sys.exit()
                 elif event.type == pygame.KEYDOWN:
                     self.user_text += event.unicode
