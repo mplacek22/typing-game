@@ -32,8 +32,8 @@ def test_calculate_accuracy_different_length():
 
 def test_read_sentences_from_file():
     sentences = read_sentences_from_file('./texts/sample.txt')
-    expected_sentences = ["This is the first sentence", "This is the second sentence", "This is the third sentence",
-                          "This is the fourth sentence"]
+    expected_sentences = ["This is the first sentence.", "This is the second sentence.", "This is the third sentence.",
+                          "This is the fourth sentence."]
     assert sentences == expected_sentences
 
 

@@ -1,5 +1,4 @@
 from pygame import QUIT
-
 from enum_level import Level
 from timer import TimerThread
 import sys
@@ -197,8 +196,7 @@ class TypingGame:
                 self.display_user_input()
 
                 if len(self.user_text) == len(self.current_sentence):
-                    if self.timer_thread.is_running:  # Check if the timer is still running
-                        self.next_sentence()
+                    self.next_sentence()
             else:
                 self.display_game_over()
 
@@ -210,9 +208,9 @@ class TypingGame:
 
     def end_game(self):
         if not self.timer_thread.is_running:
+            self.game_over = True
             self.adjust_last_sentence()
             self.display_accuracy()
-            self.game_over = True
             self.display_restart()
 
 

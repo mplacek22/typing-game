@@ -30,14 +30,15 @@ class TypingGameGUI:
 
         # Set up the buttons
         self.start_button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
-        self.difficulty_buttons = []
-        difficulty_button_y = self.button_y + self.button_height
 
-        for difficulty in Level:
+        self.difficulty_buttons = []
+        difficulty_button_y = self.button_y + 200
+
+        for difficulty in reversed(Level):
             difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width,
                                                  self.button_height)
             self.difficulty_buttons.append((difficulty_button_rect, difficulty))
-            difficulty_button_y += self.button_height + 20
+            difficulty_button_y -= self.button_height + 20
 
         self.game_state = "menu"  # Game state: "menu", "difficulty", "game"
         self.difficulty_level = None  # Selected difficulty level
@@ -55,12 +56,12 @@ class TypingGameGUI:
                     if self.game_state == "menu":
                         if self.start_button_rect.collidepoint(event.pos):
                             self.game_state = "difficulty"
-
-                    for button_rect, difficulty in self.difficulty_buttons:
-                        if button_rect.collidepoint(event.pos):
-                            self.difficulty_level = difficulty
-                            self.game_state = "game"  # Update game state, but don't start the game immediately
-                            start_game(difficulty)
+                    elif self.game_state == "difficulty":
+                        for button_rect, difficulty in self.difficulty_buttons:
+                            if button_rect.collidepoint(event.pos):
+                                self.difficulty_level = difficulty
+                                self.game_state = "game"  # Update game state, but don't start the game immediately
+                                start_game(difficulty)
 
             self.screen.fill((0, 0, 0))
 
@@ -93,7 +94,6 @@ class TypingGameGUI:
         button_text = self.font_button.render(text, True, (255, 255, 255))
         button_text_rect = button_text.get_rect(center=used_button.center)
         self.screen.blit(button_text, button_text_rect)
-
 
 
 if __name__ == "__main__":
