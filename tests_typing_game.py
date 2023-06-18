@@ -30,30 +30,6 @@ def test_calculate_accuracy_different_length():
         calculate_accuracy(string1, string2)
 
 
-# def test_read_sentences_from_file():
-#     sentences = read_sentences_from_file('./texts/sample.txt')
-#     expected_sentences = ["This is the first sentence", "This is the second sentence", "This is the third sentence",
-#                           "This is the fourth sentence"]
-#     assert sentences == expected_sentences
-#
-#
-# def test_read_sentences_from_file_nonexistent_file():
-#     file_path = './texts/nonexistent_file.txt'
-#
-#     sentences = read_sentences_from_file(file_path)
-#     assert sentences == []
-#     captured = capsys.readouterr()
-#     assert captured.out == f"File '{file_path}' does not exist.\n"
-#
-#
-# def test_read_sentences_from_file_empty_file():
-#     file_path = './texts/empty_file.txt'
-#
-#     sentences = read_sentences_from_file(file_path)
-#     assert sentences == []
-
-
-
 @pytest.fixture
 def setup_file(tmp_path):
     file_path = tmp_path / "sample.txt"

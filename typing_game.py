@@ -38,6 +38,7 @@ def read_sentences_from_file(file_path):
         logger.critical(f"File '{file_path}' does not exist.")
         return []
 
+
 def get_text_file_path(difficulty_level):
     match difficulty_level:
         case Level.EASY:
@@ -77,8 +78,6 @@ class TypingGame:
         self.timer_thread = TimerThread(self.time)
 
     def display_accuracy(self):
-        # if len(self.total_user_input) != len(self.total_expected_input):
-        #     self.total_expected_input. = self.total_expected_input[]
         accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
         accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
