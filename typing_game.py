@@ -14,13 +14,13 @@ GREEN = (0, 255, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
-    accuracy = 0
+    if len(expected_input) == 0:
+        raise ZeroDivisionError
 
-    evaluate = editdistance.eval(user_input, expected_input)
-    if evaluate > 0:
-        accuracy = round((1 - evaluate / len(expected_input)) * 100, 2)
+    if len(user_input) != len(expected_input):
+        raise ValueError(f"Input lengths do not match {len(user_input)}, {len(expected_input)}")
 
-    return accuracy
+    return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
 
 
 # def read_sentences_from_file(file_path):
@@ -86,6 +86,8 @@ class TypingGame:
         self.timer_thread = TimerThread()
 
     def display_accuracy(self):
+        # if len(self.total_user_input) != len(self.total_expected_input):
+        #     self.total_expected_input. = self.total_expected_input[]
         accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
         accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
@@ -123,6 +125,15 @@ class TypingGame:
         self.total_expected_input += self.current_sentence
         self.current_sentence = next(self.sentence_iterator)
         self.user_text = ""
+
+    def adjust_last_sentence(self):
+        # first sentence wasn't finished
+        if len(self.total_expected_input) == 0:
+            self.total_expected_input += self.current_sentence
+        # last sentence wasn't finished
+        if len(self.total_user_input) != len(self.total_expected_input):
+            self.total_user_input += self.user_text
+            self.total_expected_input = self.total_expected_input[:len(self.user_text)]
 
     def display_restart(self):
         restart_text = self.font.render('RESTART GAME', True, RED)
@@ -186,9 +197,11 @@ class TypingGame:
 
     def end_game(self):
         if not self.timer_thread.is_running:
+            self.adjust_last_sentence()
             self.display_accuracy()
             self.display_restart()
 
-# if __name__ == '__main__':
-#     game = TypingGame()
-#     game.run()
+
+if __name__ == '__main__':
+    game = TypingGame(Level.EASY)
+    game.run()
