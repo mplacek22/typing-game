@@ -1,11 +1,4 @@
-3. Dodać timer - Iza
-9. Zawijanie tekstu - Iza
-7. Dodać wybór poziomu trudności - Iza
-8. Dodać wybór tekstu
-10. Dopisać testy - Iza
-
 mock
-
 
 Maja:
 naprawić calculate_accuracy i testy

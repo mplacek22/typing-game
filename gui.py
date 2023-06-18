@@ -20,18 +20,19 @@ class TypingGameGUI:
         self.font_title = pygame.font.Font(None, 60)
         self.font_button = pygame.font.Font(None, 40)
 
-        button_width = 200
-        button_height = 80
-        button_x = (self.WIDTH - button_width) // 2
-        button_y = (self.HEIGHT - button_height) // 2
-        self.start_button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+        self.button_width = 200
+        self.button_height = 80
+        self.button_x = (self.WIDTH - self.button_width) // 2
+        self.button_y = (self.HEIGHT - self.button_height) // 2
+
+        self.start_button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
 
         self.difficulty_buttons = []
-        difficulty_button_y = button_y + button_height + 50
+        difficulty_button_y = self.button_y + self.button_height + 50
         for i, difficulty in enumerate(Level):
-            difficulty_button_rect = pygame.Rect(button_x, difficulty_button_y, button_width, button_height)
+            difficulty_button_rect = pygame.Rect(self.button_x, difficulty_button_y, self.button_width, self.button_height)
             self.difficulty_buttons.append(difficulty_button_rect)
-            difficulty_button_y += button_height + 20
+            difficulty_button_y += self.button_height + 20
 
         self.game_state = "menu"  # Game state: "menu", "difficulty", "game"
         self.difficulty_level = None  # Selected difficulty level
@@ -66,22 +67,22 @@ class TypingGameGUI:
                 self.start_game()  # Call start_game() only when the game state is "game"
 
             pygame.display.update()
-    def draw_menu(self):
-        # Draw title
-        title_text = self.font_title.render("TYPING GAME", True, (255, 255, 255))
-        title_text_rect = title_text.get_rect(center=(self.WIDTH // 2, 50))
-        self.screen.blit(title_text, title_text_rect)
 
-        pygame.draw.rect(self.screen, ("#00CED1"), self.start_button_rect)
+    def draw_heading(self, typed_text):
+        text = self.font_title.render(typed_text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(self.WIDTH // 2, 150))
+        self.screen.blit(text, text_rect)
+
+    def draw_menu(self):
+        self.draw_heading("TYPING GAME")
+
+        pygame.draw.rect(self.screen, "#00CED1", self.start_button_rect)
         start_text = self.font_button.render("Start Game", True, (255, 255, 255))
         start_text_rect = start_text.get_rect(center=self.start_button_rect.center)
         self.screen.blit(start_text, start_text_rect)
 
     def draw_difficulty_selection(self):
-        # Draw title
-        title_text = self.font_title.render("SELECT DIFFICULTY", True, (255, 255, 255))
-        title_text_rect = title_text.get_rect(center=(self.WIDTH // 2, 150))
-        self.screen.blit(title_text, title_text_rect)
+        self.draw_heading("SELECT DIFFICULTY")
 
         button_width = 200
         button_height = 80
