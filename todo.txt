@@ -5,3 +5,18 @@
 10. Dopisać testy - Iza
 
 mock
+
+
+Maja:
+naprawić calculate_accuracy i testy
+naprawić funkcję read_sentences_from_file i testy
+
+Iza:
+Dodać funkcję zakończenia gry: accuracy na środku, restart zostawić
+restart działa tak, że wracamy do wyboru poziomu trudności
+Czas w konstruktorze
+
+
+
+Pytania:
+Czy możemy losować zdania i usuwać te za długie (zawijanie tekstu jest trudne)

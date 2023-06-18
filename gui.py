@@ -54,8 +54,7 @@ class TypingGameGUI:
                         for i, button in enumerate(self.difficulty_buttons):
                             if button.collidepoint(event.pos):
                                 self.difficulty_level = Level(i)
-                                self.game_state = "game"  # Dodane przypisanie stanu "game"
-                                self.start_game()
+                                self.game_state = "game"  # Update game state, but don't start the game immediately
 
             self.screen.fill((0, 0, 0))
 
@@ -64,10 +63,9 @@ class TypingGameGUI:
             elif self.game_state == "difficulty":
                 self.draw_difficulty_selection()
             elif self.game_state == "game":
-                self.start_game()
+                self.start_game()  # Call start_game() only when the game state is "game"
 
             pygame.display.update()
-
     def draw_menu(self):
         # Draw title
         title_text = self.font_title.render("TYPING GAME", True, (255, 255, 255))
@@ -94,11 +92,25 @@ class TypingGameGUI:
         for i, button in enumerate(self.difficulty_buttons):
             button_rect = pygame.Rect(button_x, button_y, button_width, button_height)
             pygame.draw.rect(self.screen, (255, 140, 0), button_rect)
-            difficulty_text = self.font_button.render([level.name.capitalize() for level in Level][i], True, (255, 255, 255))
+
+            difficulty_text = self.font_button.render(Level(i).name.capitalize(), True, (255, 255, 255))
             difficulty_text_rect = difficulty_text.get_rect(center=button_rect.center)
             self.screen.blit(difficulty_text, difficulty_text_rect)
 
             button_y += button_height + 20
+
+        # Display the selected difficulty level
+        if self.difficulty_level is not None:
+            selected_difficulty_text = self.font_button.render(
+                "Selected Difficulty: " + self.difficulty_level.name.capitalize(),
+                True,
+                (255, 255, 255)
+            )
+            selected_difficulty_text_rect = selected_difficulty_text.get_rect(center=(self.WIDTH // 2, 400))
+            self.screen.blit(selected_difficulty_text, selected_difficulty_text_rect)
+
+        # Update the display
+        pygame.display.flip()
 
     def start_game(self):
         from typing_game import TypingGame

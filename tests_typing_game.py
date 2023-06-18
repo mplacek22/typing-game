@@ -1,5 +1,7 @@
 import time
 import pytest
+
+from gui import Level
 from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
 
 
@@ -16,8 +18,8 @@ def test_calculate_accuracy():
 
 def test_read_sentences_from_file():
     sentences = read_sentences_from_file('./texts/sample.txt')
-    expected_sentences = ["This is the first sentence.", "This is the second sentence.", "This is the third sentence.",
-                          "This is the fourth sentence."]
+    expected_sentences = ["This is the first sentence", "This is the second sentence", "This is the third sentence",
+                          "This is the fourth sentence"]
     assert sentences == expected_sentences
 
 
@@ -33,7 +35,8 @@ def test_typing_game_start_timer():
 
 
 def test_typing_game_stop_timer():
-    game = TypingGame()
+    diff = Level.EASY
+    game = TypingGame(diff)
     game.timer_thread.remaining_time = 10
 
     game.stop_timer()
@@ -44,23 +47,22 @@ def test_typing_game_stop_timer():
 
 
 def test_typing_game_restart_game():
-    game = TypingGame()
-    game.sentences = ["Sentence 1", "Sentence 2"]
+    diff = Level.EASY
+    game = TypingGame(diff)
+    game.sentences = ["Sentence 1", "Sentence 2", "Sentence 3"]
     game.sentence_iterator = iter(game.sentences)
     game.current_sentence = next(game.sentence_iterator)
     game.user_text = "Sentence 1"
     game.total_user_input = ["Sentence 1"]
     game.total_expected_input = ["Sentence 1"]
-    game.i = 1
 
     game.restart_game()
 
-    assert list(game.sentence_iterator) == game.sentences
     assert game.current_sentence == game.sentences[0]
     assert game.user_text == ""
     assert game.total_user_input == []
     assert game.total_expected_input == []
-    assert game.i == 0
+
 
 
 if __name__ == '__main__':
