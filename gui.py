@@ -71,17 +71,6 @@ class TypingGameGUI:
 
             pygame.display.update()
 
-    def draw_heading(self, typed_text):
-        text = self.font_title.render(typed_text, True, (255, 255, 255))
-        text_rect = text.get_rect(center=(self.WIDTH // 2, 150))
-        self.screen.blit(text, text_rect)
-
-    def draw_button(self, text, color, used_button):
-        pygame.draw.rect(self.screen, color, used_button)
-        button_text = self.font_button.render(text, True, (255, 255, 255))
-        button_text_rect = button_text.get_rect(center=used_button.center)
-        self.screen.blit(button_text, button_text_rect)
-
     def draw_menu(self):
         self.draw_heading("TYPING GAME")
         self.draw_button("Start Game", "#00CED1", self.start_button_rect)
@@ -93,6 +82,18 @@ class TypingGameGUI:
             self.draw_button(difficulty.name.capitalize(), (255, 140, 0), button_rect)
 
         pygame.display.flip()
+
+    def draw_heading(self, typed_text):
+        text = self.font_title.render(typed_text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=(self.WIDTH // 2, 150))
+        self.screen.blit(text, text_rect)
+
+    def draw_button(self, text, color, used_button):
+        pygame.draw.rect(self.screen, color, used_button)
+        button_text = self.font_button.render(text, True, (255, 255, 255))
+        button_text_rect = button_text.get_rect(center=used_button.center)
+        self.screen.blit(button_text, button_text_rect)
+
 
 
 if __name__ == "__main__":
