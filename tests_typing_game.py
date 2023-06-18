@@ -1,6 +1,6 @@
 import time
 import pytest
-
+import logging
 from main_gui import Level
 from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
 
@@ -30,11 +30,63 @@ def test_calculate_accuracy_different_length():
         calculate_accuracy(string1, string2)
 
 
-def test_read_sentences_from_file():
-    sentences = read_sentences_from_file('./texts/sample.txt')
+# def test_read_sentences_from_file():
+#     sentences = read_sentences_from_file('./texts/sample.txt')
+#     expected_sentences = ["This is the first sentence", "This is the second sentence", "This is the third sentence",
+#                           "This is the fourth sentence"]
+#     assert sentences == expected_sentences
+#
+#
+# def test_read_sentences_from_file_nonexistent_file():
+#     file_path = './texts/nonexistent_file.txt'
+#
+#     sentences = read_sentences_from_file(file_path)
+#     assert sentences == []
+#     captured = capsys.readouterr()
+#     assert captured.out == f"File '{file_path}' does not exist.\n"
+#
+#
+# def test_read_sentences_from_file_empty_file():
+#     file_path = './texts/empty_file.txt'
+#
+#     sentences = read_sentences_from_file(file_path)
+#     assert sentences == []
+
+
+
+@pytest.fixture
+def setup_file(tmp_path):
+    file_path = tmp_path / "sample.txt"
+    content = "This is the first sentence. This is the second sentence.\nThis is the third sentence. This is the fourth sentence."
+    file_path.write_text(content)
+    return file_path
+
+
+def test_read_sentences_from_file_existing_file(setup_file, caplog):
     expected_sentences = ["This is the first sentence", "This is the second sentence", "This is the third sentence",
                           "This is the fourth sentence"]
+    caplog.set_level(logging.CRITICAL)
+
+    sentences = read_sentences_from_file(setup_file)
     assert sentences == expected_sentences
+    assert f"File '{setup_file}' does not exist." not in caplog.text
+
+
+def test_read_sentences_from_file_nonexistent_file(caplog):
+    non_existing_file = "nonexistent.txt"
+    caplog.set_level(logging.CRITICAL)
+
+    sentences = read_sentences_from_file(non_existing_file)
+    assert sentences == []
+    assert f"File '{non_existing_file}' does not exist." in caplog.text
+
+
+def test_read_sentences_from_file_empty_file(tmp_path):
+    empty_file_path = tmp_path / "empty.txt"
+    empty_file_path.touch()
+
+    sentences = read_sentences_from_file(empty_file_path)
+    assert sentences == []
 
 
 def test_typing_game_start_timer():

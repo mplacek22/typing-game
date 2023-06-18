@@ -1,8 +1,6 @@
 mock
 
 Maja:
-naprawić calculate_accuracy i testy
-naprawić funkcję read_sentences_from_file i testy
 
 Iza:
 Dodać funkcję zakończenia gry: accuracy na środku, restart zostawić

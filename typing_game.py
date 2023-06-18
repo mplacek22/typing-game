@@ -1,5 +1,6 @@
 from pygame import QUIT
 import re
+import logging
 from enum_level import Level
 from timer import TimerThread
 import sys
@@ -24,17 +25,18 @@ def calculate_accuracy(user_input, expected_input):
 
 
 def read_sentences_from_file(file_path):
-    sentences_list = []
+    logger = logging.getLogger(__name__)
+
     try:
         with open(file_path, 'r') as file:
             text = file.read()
             sentence_delimiters = r'[.!?]+[\n\s]*'
             sentences_list = re.split(sentence_delimiters, text)
             sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+        return sentences_list
     except FileNotFoundError:
-        print(f"File '{file_path}' does not exist.")
-    return sentences_list
-
+        logger.critical(f"File '{file_path}' does not exist.")
+        return []
 
 def get_text_file_path(difficulty_level):
     match difficulty_level:
