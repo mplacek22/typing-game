@@ -1,5 +1,5 @@
 from pygame import QUIT
-
+import re
 from enum_level import Level
 from timer import TimerThread
 import sys
@@ -23,29 +23,16 @@ def calculate_accuracy(user_input, expected_input):
     return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
 
 
-# def read_sentences_from_file(file_path):
-#     sentences_list = []
-#     with open(file_path, 'r') as file:
-#         text = file.read()
-#         sentence_delimiters = ['.', '!', '?']
-#         for delimiter in sentence_delimiters:
-#             sentences_list.extend(text.split(delimiter))
-#         sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
-#     return sentences_list
-
 def read_sentences_from_file(file_path):
     sentences_list = []
-    with open(file_path, 'r') as file:
-        text = file.read()
-        sentence_delimiters = ['.', '!', '?']
-        current_sentence = ""
-        for char in text:
-            current_sentence += char
-            if char in sentence_delimiters:
-                sentences_list.append(current_sentence.strip())
-                current_sentence = ""
-    if current_sentence:
-        sentences_list.append(current_sentence.strip())
+    try:
+        with open(file_path, 'r') as file:
+            text = file.read()
+            sentence_delimiters = r'[.!?]+[\n\s]*'
+            sentences_list = re.split(sentence_delimiters, text)
+            sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
+    except FileNotFoundError:
+        print(f"File '{file_path}' does not exist.")
     return sentences_list
 
 
@@ -81,13 +68,9 @@ class TypingGame:
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
-
-        # Timer variables
         self.timer_thread = TimerThread()
 
     def display_accuracy(self):
-        # if len(self.total_user_input) != len(self.total_expected_input):
-        #     self.total_expected_input. = self.total_expected_input[]
         accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
         accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
@@ -147,7 +130,6 @@ class TypingGame:
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
-
         self.start_timer()
 
     def display_timer(self):
@@ -188,18 +170,17 @@ class TypingGame:
 
             if len(self.user_text) == len(self.current_sentence):
                 self.next_sentence()
-
-            self.end_game()
+            if not self.timer_thread.is_running:
+                self.end_game()
 
             pygame.display.update()
 
         pygame.quit()
 
     def end_game(self):
-        if not self.timer_thread.is_running:
-            self.adjust_last_sentence()
-            self.display_accuracy()
-            self.display_restart()
+        self.adjust_last_sentence()
+        self.display_accuracy()
+        self.display_restart()
 
 
 if __name__ == '__main__':
