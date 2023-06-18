@@ -49,8 +49,7 @@ def test_typing_game_start_timer():
 
 
 def test_typing_game_stop_timer():
-    diff = Level.EASY
-    game = TypingGame(diff)
+    game = TypingGame(Level.EASY)
     game.timer_thread.remaining_time = 10
 
     game.stop_timer()
