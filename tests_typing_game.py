@@ -1,7 +1,7 @@
 import time
 import pytest
 
-from gui import Level
+from main_gui import Level
 from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
 
 
@@ -65,9 +65,9 @@ def test_typing_game_restart_game():
     game.sentences = ["Sentence 1", "Sentence 2", "Sentence 3"]
     game.sentence_iterator = iter(game.sentences)
     game.current_sentence = next(game.sentence_iterator)
-    game.user_text = "Sentence 1"
-    game.total_user_input = ["Sentence 1"]
-    game.total_expected_input = ["Sentence 1"]
+    game.user_text = "bla blabla"
+    game.total_user_input = ["ha ha ha  ", "bla blabla"]
+    game.total_expected_input = ["Sentence 1", "Sentence 2"]
 
     game.restart_game()
 
@@ -75,7 +75,3 @@ def test_typing_game_restart_game():
     assert game.user_text == ""
     assert game.total_user_input == []
     assert game.total_expected_input == []
-
-
-if __name__ == '__main__':
-    pytest.main()

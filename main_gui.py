@@ -95,7 +95,6 @@ class TypingGameGUI:
         self.screen.blit(button_text, button_text_rect)
 
 
-
 if __name__ == "__main__":
     game_gui = TypingGameGUI()
     game_gui.run()
