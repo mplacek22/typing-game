@@ -1,7 +1,7 @@
 import time
 import pytest
 import logging
-from enum_level import Level
+from enums import Level
 from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
 
 

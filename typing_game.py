@@ -1,19 +1,13 @@
 from pygame import QUIT
 import re
 import logging
-from enum_level import Level
+from enums import Level, Color
 from timer import TimerThread
 import sys
 import editdistance
 import pygame
 from random import randint
 import game_gui_handler
-
-# Colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
 
 
 def calculate_accuracy(user_input, expected_input):
@@ -82,7 +76,7 @@ class TypingGame:
             accuracy = 0
         else:
             accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
-        accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
+        accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, Color.WHITE.value)
         self.screen.blit(accuracy_text, (10, 10))
 
     def display_center(self, text, color, pos):
@@ -91,23 +85,23 @@ class TypingGame:
         self.screen.blit(text_render, text_rect)
 
     def display_user_input(self):
-        self.display_center(self.user_text, WHITE, 50)
+        self.display_center(self.user_text, Color.WHITE.value, 50)
 
     def display_game_over(self):
-        self.display_center('GAME OVER!', RED, 0)
+        self.display_center('GAME OVER!', Color.RED.value, 0)
 
     def display_current_sentence(self):
-        sentence_text = self.font.render(self.current_sentence, True, WHITE)
+        sentence_text = self.font.render(self.current_sentence, True, Color.WHITE.value)
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
         letter_x = sentence_rect.left  # Starting x-coordinate
 
         for i, letter in enumerate(self.current_sentence):
-            letter_color = WHITE
+            letter_color = Color.WHITE.value
             if i < len(self.user_text):
                 if self.user_text[i] == letter:
-                    letter_color = GREEN  # Green for correct letter
+                    letter_color = Color.GREEN.value  # Green for correct letter
                 else:
-                    letter_color = RED  # Red for incorrect letter
+                    letter_color = Color.RED.value  # Red for incorrect letter
 
             letter_surface = self.font.render(letter, True, letter_color)
             letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
@@ -133,7 +127,7 @@ class TypingGame:
             self.total_expected_input = self.total_expected_input[:len(self.user_text)]
 
     def display_restart(self):
-        restart_text = self.font.render('RESTART GAME', True, RED)
+        restart_text = self.font.render('RESTART GAME', True, Color.RED.value)
         restart_rect = restart_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT - 50))
         self.screen.blit(restart_text, restart_rect)
         return restart_rect
@@ -147,7 +141,7 @@ class TypingGame:
         self.start_timer()
 
     def display_timer(self):
-        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, WHITE)
+        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, Color.WHITE.value)
         self.screen.blit(timer_text, (self.WIDTH - 150, 10))
 
     def start_timer(self):
@@ -178,7 +172,7 @@ class TypingGame:
                         self.running = False
                         game_gui_handler.run_select_difficulties()
 
-            self.screen.fill(BLACK)
+            self.screen.fill(Color.BLACK.value)
             self.display_timer()
 
             if not self.game_over:

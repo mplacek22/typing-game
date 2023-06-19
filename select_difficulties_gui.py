@@ -1,7 +1,7 @@
 import sys
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-from enum_level import Level
+from enums import Level
 from gui_functions import draw_heading, draw_button
 import game_gui_handler
 
