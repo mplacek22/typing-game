@@ -74,11 +74,15 @@ class TypingGame:
         self.total_expected_input = []
 
         # Timer variables
-        self.time = 10
-        self.timer_thread = TimerThread(self.time)
+        self.game_duration = 10
+        self.timer_thread = TimerThread(self.game_duration)
 
     def display_accuracy(self):
-        accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
+        # if user did not type any letter accuracy = 0
+        if self.user_text == "" and self.total_user_input == []:
+            accuracy = 0
+        else:
+            accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
         accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
 
@@ -151,7 +155,7 @@ class TypingGame:
 
     def start_timer(self):
         if not self.timer_thread.is_alive():
-            self.timer_thread = TimerThread(self.time)  # Creating a new TimerThread object
+            self.timer_thread = TimerThread(self.game_duration)  # Creating a new TimerThread object
             self.timer_thread.start()
 
     def stop_timer(self):
