@@ -40,15 +40,12 @@ def read_sentences_from_file(file_path):
 
 
 def get_text_file_path(difficulty_level):
-    match difficulty_level:
-        case Level.EASY:
-            return './texts/easy.txt'
-        case Level.MEDIUM:
-            return './texts/medium.txt'
-        case Level.HARD:
-            return './texts/hard.txt'
-        case _:
-            return './texts/sample.txt'
+    file_paths = {
+        Level.EASY: './texts/easy.txt',
+        Level.MEDIUM: './texts/medium.txt',
+        Level.HARD: './texts/hard.txt',
+    }
+    return file_paths.get(difficulty_level)
 
 
 class TypingGame:
