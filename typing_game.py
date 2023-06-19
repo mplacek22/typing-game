@@ -138,12 +138,11 @@ class TypingGame:
         return restart_rect
 
     def restart_game(self):
-        self.game_over = False
         self.current_sentence = self.sentences[randint(0, self.no_sentences)]
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
-
+        self.game_over = False
         self.start_timer()
 
     def display_timer(self):
