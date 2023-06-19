@@ -1,16 +1,17 @@
-import sys
-
-import pygame
-from pygame import QUIT, MOUSEBUTTONDOWN
-
-from enum_level import Level
-from gui_functions import draw_heading, draw_button
-from select_difficulties_gui import SelectDifficultiesGUI
-from start_game import start_game
-
-
+# import sys
+# import pygame
+# from pygame.locals import *
+#
+# from enum_level import Level
+# from typing_game import TypingGame
 #
 #
+def start_game(difficulty_level):
+    game = TypingGame(difficulty_level)
+    game.run()
+
+
+
 # class TypingGameGUI:
 #     def __init__(self):
 #         pygame.init()
@@ -63,7 +64,6 @@ from start_game import start_game
 #                                 self.game_state = "game"  # Update game state, but don't start the game immediately
 #                                 start_game(difficulty)
 #
-#
 #             self.screen.fill((0, 0, 0))
 #
 #             if self.game_state == "menu":
@@ -100,61 +100,3 @@ from start_game import start_game
 # if __name__ == "__main__":
 #     game_gui = TypingGameGUI()
 #     game_gui.run()
-
-
-class TypingGameGUI:
-    def __init__(self):
-        pygame.init()
-
-        # Set up the screen
-        self.WIDTH = 900
-        self.HEIGHT = 600
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        pygame.display.set_caption("Typing Game")
-
-        self.button_width = 200
-        self.button_height = 80
-        self.button_x = (self.WIDTH - self.button_width) // 2
-        self.button_y = (self.HEIGHT - self.button_height) // 2
-
-        # Set up the button
-        self.start_button_rect = pygame.Rect(self.button_x, self.button_y, self.button_width, self.button_height)
-
-        self.game_state = "menu"
-
-    def run(self):
-        running = True
-        select_difficulties_gui = SelectDifficultiesGUI()
-
-        while running:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    running = False
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if self.game_state == "menu":
-                        if self.start_button_rect.collidepoint(event.pos):
-                            self.game_state = "difficulty"
-                    # elif self.game_state == "difficulty":
-                    #     self.game_state = "game"
-
-            self.screen.fill((0, 0, 0))
-
-            if self.game_state == "menu":
-                self.draw_menu()
-            elif self.game_state == "difficulty":
-                select_difficulties_gui.draw()
-                # self.game_state = "game"
-                select_difficulties_gui.handle_events()
-
-            pygame.display.update()
-
-    def draw_menu(self):
-        draw_heading(self.screen, "TYPING GAME")
-        draw_button(self.screen, "Start Game", "#00CED1", self.start_button_rect)
-
-
-if __name__ == "__main__":
-    game_gui = TypingGameGUI()
-    game_gui.run()

@@ -2,6 +2,7 @@ from pygame import QUIT
 import re
 import logging
 from enum_level import Level
+# from restart_game import restart
 from timer import TimerThread
 import sys
 import editdistance
@@ -174,7 +175,8 @@ class TypingGame:
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     restart_rect = self.display_restart()
                     if restart_rect.collidepoint(event.pos):
-                        self.restart_game()
+                       # restart()
+                       self.restart_game()
 
             self.screen.fill(BLACK)
 
