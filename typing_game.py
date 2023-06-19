@@ -6,6 +6,7 @@ from timer import TimerThread
 import sys
 import editdistance
 import pygame
+from random import randint
 
 # Colors
 WHITE = (255, 255, 255)
@@ -64,7 +65,7 @@ class TypingGame:
         self.font = pygame.font.Font(None, 40)
         self.text_file = get_text_file_path(difficulty_level)
         self.sentences = read_sentences_from_file(self.text_file)
-        self.sentence_iterator = None
+        self.no_sentences = len(self.sentences)
         self.current_sentence = None
         self.user_text = ""
         self.total_user_input = []
@@ -118,7 +119,7 @@ class TypingGame:
     def next_sentence(self):
         self.total_user_input += self.user_text
         self.total_expected_input += self.current_sentence
-        self.current_sentence = next(self.sentence_iterator)
+        self.current_sentence = self.sentences[randint(0, self.no_sentences)]
         self.user_text = ""
 
     def adjust_last_sentence(self):
@@ -138,8 +139,7 @@ class TypingGame:
 
     def restart_game(self):
         self.game_over = False
-        self.sentence_iterator = iter(self.sentences)
-        self.current_sentence = next(self.sentence_iterator)
+        self.current_sentence = self.sentences[randint(0, self.no_sentences)]
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
