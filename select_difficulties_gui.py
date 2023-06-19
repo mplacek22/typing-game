@@ -1,15 +1,14 @@
 import sys
-
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-
 from enum_level import Level
 from gui_functions import draw_heading, draw_button
-from start_game import start_game
+import game_gui_handler
 
 
 class SelectDifficultiesGUI:
     def __init__(self):
+        self.running = None
         pygame.init()
 
         # Set up the screen
@@ -45,7 +44,7 @@ class SelectDifficultiesGUI:
                 for button_rect, difficulty in self.difficulty_buttons:
                     if button_rect.collidepoint(event.pos):
                         self.difficulty_level = difficulty
-                        start_game(difficulty)
+                        game_gui_handler.run_game(self.difficulty_level)
 
     def draw(self):
         self.screen.fill((0, 0, 0))
@@ -54,4 +53,20 @@ class SelectDifficultiesGUI:
         for button_rect, difficulty in self.difficulty_buttons:
             draw_button(self.screen, difficulty.name.capitalize(), (255, 140, 0), button_rect)
 
-        pygame.display.flip()
+    def run(self):
+        self.running = True
+
+        while self.running:
+            self.handle_events()
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    for button_rect, difficulty in self.difficulty_buttons:
+                        if button_rect.collidepoint(event.pos):
+                            self.difficulty_level = difficulty
+                            # start_game(difficulty)
+                            self.running = False
+                            game_gui_handler.run_game(difficulty)

@@ -2,12 +2,12 @@ from pygame import QUIT
 import re
 import logging
 from enum_level import Level
-# from restart_game import restart
 from timer import TimerThread
 import sys
 import editdistance
 import pygame
 from random import randint
+import game_gui_handler
 
 # Colors
 WHITE = (255, 255, 255)
@@ -175,11 +175,10 @@ class TypingGame:
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     restart_rect = self.display_restart()
                     if restart_rect.collidepoint(event.pos):
-                       # restart()
-                       self.restart_game()
+                        self.running = False
+                        game_gui_handler.run_select_difficulties()
 
             self.screen.fill(BLACK)
-
             self.display_timer()
 
             if not self.game_over:
@@ -191,15 +190,15 @@ class TypingGame:
             else:
                 self.display_game_over()
 
-            self.end_game()
+            if not self.timer_thread.is_running:
+                self.end_game()
 
             pygame.display.update()
 
         pygame.quit()
 
     def end_game(self):
-        if not self.timer_thread.is_running:
-            self.game_over = True
-            self.adjust_last_sentence()
-            self.display_accuracy()
-            self.display_restart()
+        self.game_over = True
+        self.adjust_last_sentence()
+        self.display_accuracy()
+        self.display_restart()
