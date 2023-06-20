@@ -1,8 +1,8 @@
 import sys
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-from game_logic.functions import draw_heading, draw_button
-from game_logic.values import BLUE, BLACK
+from game_logic.helper_functions import draw_heading, draw_button
+from game_logic.colors import BLUE, BLACK
 from gui import game_gui_handler
 
 

@@ -1,10 +1,10 @@
 import random
 from pygame import QUIT
-from game_logic.functions import get_text_file_path, read_sentences_from_file, calculate_accuracy
+from game_logic.helper_functions import get_text_file_path, read_sentences_from_file, calculate_accuracy
 from game_logic.timer import TimerThread
 import sys
 import pygame
-from game_logic.values import WHITE, RED, GREEN, BLACK
+from game_logic.colors import WHITE, RED, GREEN, BLACK
 from gui import game_gui_handler
 
 

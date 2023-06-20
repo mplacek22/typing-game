@@ -3,7 +3,7 @@ import os
 import re
 import editdistance
 import pygame
-from game_logic.values import Level, WHITE
+from game_logic.colors import Level, WHITE
 
 
 def draw_heading(screen, typed_text):
