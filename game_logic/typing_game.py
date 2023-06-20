@@ -33,7 +33,6 @@ class TypingGame:
         self.game_duration = 30
         self.timer_thread = TimerThread(self.game_duration)
 
-
     def display_accuracy(self):
         # if user did not type any letter accuracy = 0
         if self.user_text == "" and self.total_user_input == []:
