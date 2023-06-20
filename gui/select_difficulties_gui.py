@@ -1,9 +1,9 @@
 import sys
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-from enums import Level
-from functions import draw_heading, draw_button
-from guI import game_gui_handler
+from game_logic.values import Level, BLACK, ORANGE
+from game_logic.functions import draw_heading, draw_button
+from gui import game_gui_handler
 
 
 class SelectDifficultiesGUI:
@@ -32,7 +32,7 @@ class SelectDifficultiesGUI:
 
     def run(self):
         self.running = True
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(BLACK)
         self.draw_menu()
         pygame.display.update()
 
@@ -52,4 +52,4 @@ class SelectDifficultiesGUI:
         draw_heading(self.screen, "SELECT DIFFICULTY")
 
         for button_rect, difficulty in self.difficulty_buttons:
-            draw_button(self.screen, difficulty.name.capitalize(), (255, 140, 0), button_rect)
+            draw_button(self.screen, difficulty.name.capitalize(), ORANGE, button_rect)

@@ -1,8 +1,9 @@
 import sys
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-from functions import draw_heading, draw_button
-from guI import game_gui_handler
+from game_logic.functions import draw_heading, draw_button
+from game_logic.values import BLUE, BLACK
+from gui import game_gui_handler
 
 
 class StartGUI:
@@ -24,7 +25,7 @@ class StartGUI:
 
     def run(self):
         self.running = True
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(BLACK)
         self.draw_start()
         pygame.display.update()
 
@@ -41,5 +42,5 @@ class StartGUI:
 
     def draw_start(self):
         draw_heading(self.screen, "TYPING GAME")
-        draw_button(self.screen, "Start Game", "#00CED1", self.start_button_rect)
+        draw_button(self.screen, "Start Game", BLUE, self.start_button_rect)
 

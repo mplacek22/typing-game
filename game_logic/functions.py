@@ -1,13 +1,14 @@
 import logging
+import os
 import re
 import editdistance
 import pygame
-from enums import Level
+from game_logic.values import Level, WHITE
 
 
 def draw_heading(screen, typed_text):
     font_title = pygame.font.Font(None, 60)
-    text = font_title.render(typed_text, True, (255, 255, 255))
+    text = font_title.render(typed_text, True, WHITE)
     text_rect = text.get_rect(center=(screen.get_width() // 2, 150))
     screen.blit(text, text_rect)
 
@@ -15,7 +16,7 @@ def draw_heading(screen, typed_text):
 def draw_button(screen, text, color, used_button):
     font_button = pygame.font.Font(None, 40)
     pygame.draw.rect(screen, color, used_button)
-    button_text = font_button.render(text, True, (255, 255, 255))
+    button_text = font_button.render(text, True, WHITE)
     button_text_rect = button_text.get_rect(center=used_button.center)
     screen.blit(button_text, button_text_rect)
 
@@ -46,9 +47,20 @@ def read_sentences_from_file(file_path):
 
 
 def get_text_file_path(difficulty_level):
+    parent_dir = get_dir()
     file_paths = {
-        Level.EASY: './texts/easy.txt',
-        Level.MEDIUM: './texts/medium.txt',
-        Level.HARD: './texts/hard.txt',
+        Level.EASY: os.path.join(parent_dir, 'texts/easy.txt'),
+        Level.MEDIUM: os.path.join(parent_dir, 'texts/medium.txt'),
+        Level.HARD: os.path.join(parent_dir, 'texts/hard.txt'),
     }
     return file_paths.get(difficulty_level)
+
+
+def get_dir():
+    current_dir = os.getcwd()  # Store the current directory
+    os.chdir('..')  # Change to the parent directory
+    parent_dir = os.getcwd()  # Get the new current directory
+    os.chdir(current_dir)  # Change back to the original directory
+    return parent_dir
+
+

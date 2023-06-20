@@ -1,5 +1,5 @@
-import typing_game
-from guI import start_gui, select_difficulties_gui
+from game_logic import typing_game
+from gui import start_gui, select_difficulties_gui
 
 
 def run_start():

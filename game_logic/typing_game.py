@@ -1,11 +1,11 @@
+import random
 from pygame import QUIT
-from enums import Color
-from functions import get_text_file_path, read_sentences_from_file, calculate_accuracy
-from timer import TimerThread
+from game_logic.functions import get_text_file_path, read_sentences_from_file, calculate_accuracy
+from game_logic.timer import TimerThread
 import sys
 import pygame
-from random import randint
-from guI import game_gui_handler
+from game_logic.values import WHITE, RED, GREEN, BLACK
+from gui import game_gui_handler
 
 
 class TypingGame:
@@ -23,7 +23,6 @@ class TypingGame:
         self.game_over = False
         self.text_file = get_text_file_path(difficulty_level)
         self.sentences = read_sentences_from_file(self.text_file)
-        self.no_sentences = len(self.sentences)
         self.current_sentence = None
         self.user_text = ""
         self.total_user_input = []
@@ -41,7 +40,7 @@ class TypingGame:
             accuracy = 0
         else:
             accuracy = calculate_accuracy(self.total_user_input, self.total_expected_input)
-        accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, Color.WHITE.value)
+        accuracy_text = self.font.render(f"Accuracy: {accuracy} %", True, WHITE)
         self.screen.blit(accuracy_text, (10, 10))
 
     def display_center(self, text, color, pos):
@@ -50,23 +49,23 @@ class TypingGame:
         self.screen.blit(text_render, text_rect)
 
     def display_user_input(self):
-        self.display_center(self.user_text, Color.WHITE.value, 50)
+        self.display_center(self.user_text, WHITE, 50)
 
     def display_game_over(self):
-        self.display_center('GAME OVER!', Color.RED.value, 0)
+        self.display_center('GAME OVER!', RED, 0)
 
     def display_current_sentence(self):
-        sentence_text = self.font.render(self.current_sentence, True, Color.WHITE.value)
+        sentence_text = self.font.render(self.current_sentence, True, WHITE)
         sentence_rect = sentence_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 50))
         letter_x = sentence_rect.left  # Starting x-coordinate
 
         for i, letter in enumerate(self.current_sentence):
-            letter_color = Color.WHITE.value
+            letter_color = WHITE
             if i < len(self.user_text):
                 if self.user_text[i] == letter:
-                    letter_color = Color.GREEN.value  # Green for correct letter
+                    letter_color = GREEN  # Green for correct letter
                 else:
-                    letter_color = Color.RED.value  # Red for incorrect letter
+                    letter_color = RED  # Red for incorrect letter
 
             letter_surface = self.font.render(letter, True, letter_color)
             letter_rect = letter_surface.get_rect(topleft=(letter_x, sentence_rect.bottom))
@@ -79,7 +78,7 @@ class TypingGame:
     def next_sentence(self):
         self.total_user_input += self.user_text
         self.total_expected_input += self.current_sentence
-        self.current_sentence = self.sentences[randint(0, self.no_sentences)]
+        self.current_sentence = random.choice(self.sentences)
         self.user_text = ""
 
     def adjust_last_sentence(self):
@@ -92,13 +91,13 @@ class TypingGame:
             self.total_expected_input = self.total_expected_input[:len(self.user_text)]
 
     def display_restart(self):
-        restart_text = self.font.render('RESTART GAME', True, Color.RED.value)
+        restart_text = self.font.render('RESTART GAME', True, RED)
         restart_rect = restart_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT - 50))
         self.screen.blit(restart_text, restart_rect)
         return restart_rect
 
     def restart_game(self):
-        self.current_sentence = self.sentences[randint(0, self.no_sentences)]
+        self.current_sentence = random.choice(self.sentences)
         self.user_text = ""
         self.total_user_input = []
         self.total_expected_input = []
@@ -106,7 +105,7 @@ class TypingGame:
         self.start_timer()
 
     def display_timer(self):
-        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, Color.WHITE.value)
+        timer_text = self.font.render(f"Time: {self.timer_thread.remaining_time} s", True, WHITE)
         self.screen.blit(timer_text, (self.WIDTH - 150, 10))
 
     def start_timer(self):
@@ -137,7 +136,7 @@ class TypingGame:
                         self.running = False
                         game_gui_handler.run_select_difficulties()
 
-            self.screen.fill(Color.BLACK.value)
+            self.screen.fill(BLACK)
             self.display_timer()
 
             if not self.game_over:
