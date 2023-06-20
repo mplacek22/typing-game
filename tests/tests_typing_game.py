@@ -1,15 +1,16 @@
+import logging
 import time
 import pytest
-import logging
 from enums import Level
-from typing_game import calculate_accuracy, read_sentences_from_file, TypingGame
+from functions import calculate_accuracy, read_sentences_from_file
+from typing_game import TypingGame
 
 
 @pytest.mark.parametrize("expected_accuracy, string1, string2", [
     (100, "Hello!", "Hello!"),
     (20, "Hello", "World"),
     (0, "aaaa", "bbbb"),
-    (86.21, "Hi, this is the typing game!!", "Ho,mthis is tge typing game!1"),
+    (88.57, "Hi, this is the typing game_logic!!", "Ho,mthis is tge typing game_logic!1"), #86.21 było
 ])
 def test_calculate_accuracy(expected_accuracy, string1, string2):
     accuracy = calculate_accuracy(string1, string2)

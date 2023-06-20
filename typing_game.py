@@ -1,52 +1,15 @@
 from pygame import QUIT
-import re
-import logging
-from enums import Level, Color
+from enums import Color
+from functions import get_text_file_path, read_sentences_from_file, calculate_accuracy
 from timer import TimerThread
 import sys
-import editdistance
 import pygame
 from random import randint
-import game_gui_handler
-
-
-def calculate_accuracy(user_input, expected_input):
-    if len(expected_input) == 0:
-        raise ZeroDivisionError
-
-    if len(user_input) != len(expected_input):
-        raise ValueError(f"Input lengths do not match {len(user_input)}, {len(expected_input)}")
-
-    return round((1 - editdistance.eval(user_input, expected_input) / len(expected_input)) * 100, 2)
-
-
-def read_sentences_from_file(file_path):
-    logger = logging.getLogger(__name__)
-
-    try:
-        with open(file_path, 'r') as file:
-            text = file.read()
-            sentence_delimiters = r'[.!?]+[\n\s]*'
-            sentences_list = re.split(sentence_delimiters, text)
-            sentences_list = [sentence.strip() for sentence in sentences_list if sentence.strip()]
-        return sentences_list
-    except FileNotFoundError:
-        logger.critical(f"File '{file_path}' does not exist.")
-        return []
-
-
-def get_text_file_path(difficulty_level):
-    file_paths = {
-        Level.EASY: './texts/easy.txt',
-        Level.MEDIUM: './texts/medium.txt',
-        Level.HARD: './texts/hard.txt',
-    }
-    return file_paths.get(difficulty_level)
+from guI import game_gui_handler
 
 
 class TypingGame:
     def __init__(self, difficulty_level):
-        self.running = False
         pygame.init()
 
         # Set up the screen
@@ -54,10 +17,10 @@ class TypingGame:
         self.HEIGHT = 600
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Typing Game")
+        self.font = pygame.font.Font(None, 40)
 
         # Game variables
         self.game_over = False
-        self.font = pygame.font.Font(None, 40)
         self.text_file = get_text_file_path(difficulty_level)
         self.sentences = read_sentences_from_file(self.text_file)
         self.no_sentences = len(self.sentences)
@@ -69,6 +32,8 @@ class TypingGame:
         # Timer variables
         self.game_duration = 10
         self.timer_thread = TimerThread(self.game_duration)
+
+        self.running = False
 
     def display_accuracy(self):
         # if user did not type any letter accuracy = 0
@@ -192,7 +157,7 @@ class TypingGame:
         pygame.quit()
 
     def end_game(self):
-        self.game_over = True
         self.adjust_last_sentence()
         self.display_accuracy()
         self.display_restart()
+        self.game_over = True

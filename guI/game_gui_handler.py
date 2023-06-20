@@ -1,6 +1,5 @@
-import start_gui
-import select_difficulties_gui
 import typing_game
+from guI import start_gui, select_difficulties_gui
 
 
 def run_start():
@@ -8,9 +7,7 @@ def run_start():
 
 
 def run_select_difficulties():
-    diff = select_difficulties_gui.SelectDifficultiesGUI()
-    diff.draw()
-    diff.run()
+    select_difficulties_gui.SelectDifficultiesGUI().run()
 
 
 def run_game(difficulty_level):
