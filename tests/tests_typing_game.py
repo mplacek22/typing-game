@@ -1,7 +1,7 @@
 import logging
 import time
 import pytest
-from game_logic.colors import Level
+from game_logic.difficulty_level import Level
 from game_logic.helper_functions import calculate_accuracy, read_sentences_from_file
 from game_logic.typing_game import TypingGame
 

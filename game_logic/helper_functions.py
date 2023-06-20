@@ -3,7 +3,8 @@ import os
 import re
 import editdistance
 import pygame
-from game_logic.colors import Level, WHITE
+from game_logic.colors import WHITE
+from game_logic.difficulty_level import Level
 
 
 def draw_heading(screen, typed_text):
@@ -47,7 +48,7 @@ def read_sentences_from_file(file_path):
 
 
 def get_text_file_path(difficulty_level):
-    parent_dir = get_dir()
+    parent_dir = get_parent_dir()
     file_paths = {
         Level.EASY: os.path.join(parent_dir, 'texts/easy.txt'),
         Level.MEDIUM: os.path.join(parent_dir, 'texts/medium.txt'),
@@ -56,7 +57,7 @@ def get_text_file_path(difficulty_level):
     return file_paths.get(difficulty_level)
 
 
-def get_dir():
+def get_parent_dir():
     current_dir = os.getcwd()  # Store the current directory
     os.chdir('..')  # Change to the parent directory
     parent_dir = os.getcwd()  # Get the new current directory

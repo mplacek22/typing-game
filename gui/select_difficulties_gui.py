@@ -1,9 +1,10 @@
 import sys
 import pygame
 from pygame import QUIT, MOUSEBUTTONDOWN
-from game_logic.colors import Level, BLACK, ORANGE
+from game_logic.colors import BLACK, ORANGE
 from game_logic.helper_functions import draw_heading, draw_button
 from gui import game_gui_handler
+from game_logic.difficulty_level import Level
 
 
 class SelectDifficultiesGUI:
